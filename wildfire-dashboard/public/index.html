@@ -1,40 +1,89 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tweets Sentiment Map</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/index.css">
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+		<script type="text/javascript" src="lib/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNc0dmlvo53X4djeek5mOLB3Q0ETqCg7w">
+		</script>
+		<script type="text/javascript" src="lib/angular.min.js"></script>
+		<script type="text/javascript" src="lib/angular-animate.min.js"></script>
+		<script type="text/javascript" src="lib/socket.io.js"></script>
+		<script type="text/javascript" src="controller/app.js"></script>
+	</head>
+	<body ng-app="app">
+		<div class="container" ng-controller="MapController">
+			<div class="row text-center text-muted" id="title">
+				<h1>CleanAir Information Feed</h1>
+			</div>
+			<div class="row" ng-if="showLimitMessage">
+				<div class="col-md-2"></div>
+				<div class="col-md-8 text-left text-muted warning">
+					Oops... The server has temporarily reached the use limit of Twitter API. Please revisit it in 10 minutes.
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 title-seperator">
+					<hr>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 text-muted text-center" id="marker-note-group">
+					<div class="row marker-note">
+						<img src="res/img/marker-green.png">
+						<h5>Tweets Indicating Safe Zones</h5>
+					</div>
+					<div class="row marker-note">
+						<img src="res/img/marker-yellow.png">
+						<h5>Tweet Indicating Neutral Zones</h5>
+					</div>
+					<div class="row marker-note">
+						<img src="res/img/marker-red.png">
+						<h5>Tweet of Hazardous Zones</h5>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-6 col-sm-12 col-xs-12 text-left pull-left pull-right">
+							<div class="input-group"> 
+								<input class="form-control" type="text" placeholder="keyword" ng-model="keyword"/>
+								<span class="input-group-btn">
+									<button class="btn btn-info btn-outline" type="submit" ng-click="RestartBtnClick()">Restart</button>
+									<button class="btn btn-info btn-outline" type="submit" ng-click="StopBtnClick()">{{stopBtnValue}}</button>
+								</span>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-12 col-xs-12 text-muted" id="hint">
+							<h5>
+								<em>More: Click little markers to get tweet details.</em>
+							</h5>
+						</div>
+					</div>
+					<div class="row text-center" id="map-container">
+						<div id="map-canvas"></div>
+					</div>
+				</div>
+				<div class="col-md-2 text-left side-area">
+					<div class="row">
+					</div>
+					<div class="row animate" ng-repeat="trend in trends">
+						<a href="{{trend.url}}" target="_blank">{{trend.name}}</a>
+					</div>
+				</div>
+			</div>
+		</div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+		<footer class="footer">
+	      	<div class="container text-muted text-center">
+	        	<h5>Copyright 2018 © CleanAir </h5>
+	    
+	      	</div>
+	    </footer>
+	</body>
 </html>
